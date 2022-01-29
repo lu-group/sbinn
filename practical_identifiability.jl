@@ -29,13 +29,13 @@ function f_apop(dx, x, p, t)
     Vp = 3
     Vi = 11
     Vg = 10
-    C3 = 100/100
+    C3 = 100
     meal_t = 300, 650, 1100
     meal_q = 60e3, 40e3, 50e3
     f1 = Rm / (1 + exp(x3 / (Vg * C1) - a1))
     f2 = Ub * (1 - exp(-x3 / (Vg * C2)))
     kappa = (1 / Vi + 1 / (E * ti)) / C4
-    f3 = (U0 + Um / (1 + (kappa * x2)^(-beta))) / (Vg * C3)
+    f3 = (U0 + Um / (1 + max(kappa * x2,0.001)^(-beta))) / (Vg * C3)
     f4 = Rg / (1 + exp(alpha * (1 - x6 / (Vp * C5))))
     dt1 = t - meal_t[1]
     dt2 = t - meal_t[2]
@@ -54,20 +54,20 @@ function f_apop(dx, x, p, t)
 end
 
 cscale = 1; tscale = 1.;
-p = [0.200853979,5.986360211,101.2036365,11.97776077,0.00833154,208.6221286,6.592132806,301.2623884,37.65196466,78.75855574,25.93801618,71.32611075,4.063671595,88.97766871,179.85672,7.536059566,1.783340558]
+p = [0.200853979,5.986360211,101.2036365,11.97776077,0.00833154,208.6221286,6.592132806,301.2623884,37.65196466,78.75855574,25.93801618,71.32611075,4.063671595/100,88.97766871/100,179.85672,7.536059566,1.783340558]
 
 x0 = [36., 44., 11000., 0., 0., 0.] / cscale
 tspan = (0.0, 1800.0)
-prob_apop = ODELocalSensitivityProblem(f_apop, x0, tspan, p)
+prob_apop = ODEForwardSensitivityProblem(f_apop, x0, tspan, p)
 
 sol_apop = solve(prob_apop, alg_hints=[:stiff], saveat=0.1)
 x_apop, dp_apop = extract_local_sensitivities(sol_apop)
 
 lab = [L"E", L"tp", L"ti", L"td", L"k", L"Rm", L"a1", L"C1", L"C2", L"C4", L"C5", L"Ub", L"U0", L"Um", L"Rg", L"alpha", L"beta"]
 σ = 0.01 * std(x_apop, dims=2)
-cov_ϵ = σ[4]
+cov_ϵ = σ[3]
 dp = dp_apop
-cols = 4:4
+cols = 3:3
 
 #plot(sol_apop.t, x_apop[4,:], lw=2)
 
