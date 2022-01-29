@@ -53,10 +53,10 @@ function f_apop(dx, x, p, t)
     dx[6] = (x5 - x6) / td
 end
 
-cscale = 1; tscale = 1.;
+
 p = [0.200853979,5.986360211,101.2036365,11.97776077,0.00833154,208.6221286,6.592132806,301.2623884,37.65196466,78.75855574,25.93801618,71.32611075,4.063671595/100,88.97766871/100,179.85672,7.536059566,1.783340558]
 
-x0 = [36., 44., 11000., 0., 0., 0.] / cscale
+x0 = [36., 44., 11000., 0., 0., 0.]
 tspan = (0.0, 1800.0)
 prob_apop = ODEForwardSensitivityProblem(f_apop, x0, tspan, p)
 
@@ -96,8 +96,7 @@ savefig("correlation_matrix")
 
 abs.(R) .> 0.99
 
-lowerbound = sqrt.(diag(inv(F))) / tscale
-lowerbound[1:3:7] = lowerbound[1:3:7] / cscale
+lowerbound = sqrt.(diag(inv(F)))
 for i = 1:length(lab)
     println(lab[i], '\t', lowerbound[i])
 end
