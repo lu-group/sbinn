@@ -3,13 +3,13 @@ import deepxde as dde
 from deepxde.backend import tf
 import variable_to_parameter_transform
 
-def sbinn(data_t, data_y, meal_t, meal_q):
 
+def sbinn(data_t, data_y, meal_t, meal_q):
     def get_variable(v, var):
         low, up = v * 0.2, v * 1.8
         l = (up - low) / 2
         v1 = l * tf.tanh(var) + l + low
-        return v1        
+        return v1
 
     E_ = dde.Variable(0.0)
     tp_ = dde.Variable(0.0)
@@ -28,8 +28,26 @@ def sbinn(data_t, data_y, meal_t, meal_q):
     Rg_ = dde.Variable(0.0)
     alpha_ = dde.Variable(0.0)
     beta_ = dde.Variable(0.0)
-    
-    var_list_ = [E_, tp_, ti_, td_, k_, Rm_, a1_, C1_, C2_, C4_, C5_, Ub_, U0_, Um_, Rg_, alpha_, beta_]
+
+    var_list_ = [
+        E_,
+        tp_,
+        ti_,
+        td_,
+        k_,
+        Rm_,
+        a1_,
+        C1_,
+        C2_,
+        C4_,
+        C5_,
+        Ub_,
+        U0_,
+        Um_,
+        Rg_,
+        alpha_,
+        beta_,
+    ]
 
     def ODE(t, y):
         Ip = y[:, 0:1]
@@ -49,7 +67,7 @@ def sbinn(data_t, data_y, meal_t, meal_q):
         k = get_variable(0.0083, k_)
         Rm = get_variable(209, Rm_)
         a1 = get_variable(6.6, a1_)
-        C1 = get_variable(300   , C1_)
+        C1 = get_variable(300, C1_)
         C2 = get_variable(144, C2_)
         C3 = 100
         C4 = get_variable(80, C4_)
@@ -60,7 +78,7 @@ def sbinn(data_t, data_y, meal_t, meal_q):
         Rg = get_variable(180, Rg_)
         alpha = get_variable(7.5, alpha_)
         beta = get_variable(1.772, beta_)
-        
+
         f1 = Rm * tf.math.sigmoid(G / (Vg * C1) - a1)
         f2 = Ub * (1 - tf.math.exp(-G / (Vg * C2)))
         kappa = (1 / Vi + 1 / (E * ti)) / C4
@@ -80,12 +98,12 @@ def sbinn(data_t, data_y, meal_t, meal_q):
         dh2_dt = dde.grad.jacobian(y, t, i=4, j=0)
         dh3_dt = dde.grad.jacobian(y, t, i=5, j=0)
         return [
-              dIP_dt - (f1 - tmp - Ip / tp),
-              dIi_dt - (tmp - Ii / ti),
-              dG_dt - (f4 + IG - f2 - f3 * G),
-              dh1_dt - (Ip - h1) / td,
-              dh2_dt - (h1 - h2) / td,
-              dh3_dt - (h2 - h3) / td,
+            dIP_dt - (f1 - tmp - Ip / tp),
+            dIi_dt - (tmp - Ii / ti),
+            dG_dt - (f4 + IG - f2 - f3 * G),
+            dh1_dt - (Ip - h1) / td,
+            dh2_dt - (h1 - h2) / td,
+            dh3_dt - (h2 - h3) / td,
         ]
 
     geom = dde.geometry.TimeDomain(data_t[0, 0], data_t[-1, 0])
@@ -95,8 +113,8 @@ def sbinn(data_t, data_y, meal_t, meal_q):
     idx = np.append(
         np.random.choice(np.arange(1, n - 1), size=n // 5, replace=False), [0, n - 1]
     )
-    observe_y2 = dde.PointSetBC(data_t[idx],data_y[idx, 2:3],component=2)
-    
+    observe_y2 = dde.PointSetBC(data_t[idx], data_y[idx, 2:3], component=2)
+
     np.savetxt("glucose_input.dat", np.hstack((data_t[idx], data_y[idx, 2:3])))
 
     data = dde.data.PDE(geom, ODE, [observe_y2], anchors=data_t)
@@ -125,32 +143,43 @@ def sbinn(data_t, data_y, meal_t, meal_q):
     net.apply_output_transform(output_transform)
 
     model = dde.Model(data, net)
-    
+
     firsttrain = 10000
     callbackperiod = 1000
     maxepochs = 1000000
 
     model.compile("adam", lr=1e-3, loss_weights=[0, 0, 0, 0, 0, 0, 1e-2])
     model.train(epochs=firsttrain, display_every=1000)
-    model.compile("adam", lr=1e-3, loss_weights=[1, 1, 1e-2, 1, 1, 1, 1e-2], external_trainable_variables = var_list_)    
+    model.compile(
+        "adam",
+        lr=1e-3,
+        loss_weights=[1, 1, 1e-2, 1, 1, 1, 1e-2],
+        external_trainable_variables=var_list_,
+    )
     variablefilename = "variables.csv"
     variable = dde.callbacks.VariableValue(
         var_list_, period=callbackperiod, filename=variablefilename
     )
     losshistory, train_state = model.train(
-        epochs= maxepochs, display_every=1000, callbacks = [variable]
+        epochs=maxepochs, display_every=1000, callbacks=[variable]
     )
-    
+
     dde.saveplot(losshistory, train_state, issave=True, isplot=True)
 
-gluc_data = np.hsplit(np.loadtxt("glucose.dat"),[1])
-meal_data = np.hsplit(np.loadtxt("meal.dat"),[4])
+
+gluc_data = np.hsplit(np.loadtxt("glucose.dat"), [1])
+meal_data = np.hsplit(np.loadtxt("meal.dat"), [4])
 
 t = gluc_data[0]
 y = gluc_data[1]
 meal_t = meal_data[0]
 meal_q = meal_data[1]
 
-sbinn(t[:1800], y[:1800], meal_t, meal_q,)
+sbinn(
+    t[:1800],
+    y[:1800],
+    meal_t,
+    meal_q,
+)
 
 variable_to_parameter_transform.variable_file(10000, 1000, 1000000, "variables.csv")

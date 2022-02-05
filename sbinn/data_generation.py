@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.integrate import odeint
 
+
 def glucose_insulin_model(
     t,
     meal_t,
@@ -56,4 +57,4 @@ meal_q = np.array([60e3, 40e3, 50e3, 100e3])
 t = np.arange(0, 3000, 1)[:, None]
 y = glucose_insulin_model(np.ravel(t), meal_t, meal_q)
 np.savetxt("glucose.dat", np.hstack((t, y)))
-np.savetxt("meal.dat", np.hstack((meal_t,meal_q)))
+np.savetxt("meal.dat", np.hstack((meal_t, meal_q)))
