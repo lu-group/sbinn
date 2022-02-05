@@ -1,11 +1,6 @@
 import numpy as np
 
-firsttrain = 10000
-callbackperiod = 1000
-maxepochs = 1000000
-variablefilename = "variables.csv"
-
-def variable_file():
+def variable_file(firsttrain, callbackperiod, maxepochs, variablefilename):
   import csv
   import math
   
