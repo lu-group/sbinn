@@ -83,7 +83,7 @@ for i in perm
     for j = 2:Nparam
         S = hcat(S, reshape(dp[j][:,i], (Nstate,1)))
     end
-    F += S[cols,:]' * inv(cov_ϵ) * S[cols,:]
+    global F += S[cols,:]' * inv(cov_ϵ) * S[cols,:]
 end
 
 C = inv(F)
