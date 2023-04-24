@@ -24,7 +24,7 @@ bookTitle = {Computational Modeling of Signaling Networks},
 year      = {2023},
 publisher = {Springer US},
 pages     = {87--105},
-doi       = {10.1007/978-1-0716-3008-2_4},
+doi       = {10.1007/978-1-0716-3008-2_4}
 }
 ```
 
