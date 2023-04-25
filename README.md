@@ -17,14 +17,14 @@ If you use this code for academic research, you are encouraged to cite the follo
 
 ```
 @Inbook{Daneker2023,
-title     = {Systems Biology: Identifiability Analysis and Parameter Identification via Systems-Biology-Informed Neural Networks},
-author    = {Daneker, Mitchell and Zhang, Zhen and Karniadakis, George Em and Lu, Lu},
-editor    = {Nguyen, Lan K.},
-bookTitle = {Computational Modeling of Signaling Networks},
-year      = {2023},
-publisher = {Springer US},
-pages     = {87--105},
-doi       = {10.1007/978-1-0716-3008-2_4}
+  title     = {Systems Biology: Identifiability Analysis and Parameter Identification via Systems-Biology-Informed Neural Networks},
+  author    = {Daneker, Mitchell and Zhang, Zhen and Karniadakis, George Em and Lu, Lu},
+  editor    = {Nguyen, Lan K.},
+  bookTitle = {Computational Modeling of Signaling Networks},
+  year      = {2023},
+  publisher = {Springer US},
+  pages     = {87--105},
+  doi       = {10.1007/978-1-0716-3008-2_4}
 }
 ```
 
