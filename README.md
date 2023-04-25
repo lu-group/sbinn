@@ -1,6 +1,6 @@
 # SBINN: Systems-biology informed neural network
 
-The source code for the paper [M. Daneker, Z. Zhang, G. E. Karniadakis, & L. Lu. Systems biology: Identifiability analysis and parameter identification via systems-biology-informed neural networks. *Computational Modeling of Signaling Networks*, Springer, 87–105, 2023.](https://link.springer.com/protocol/10.1007/978-1-0716-3008-2_4).
+The source code for the paper [M. Daneker, Z. Zhang, G. E. Karniadakis, & L. Lu. Systems biology: Identifiability analysis and parameter identification via systems-biology-informed neural networks. *Computational Modeling of Signaling Networks*, Springer, 87–105, 2023](https://link.springer.com/protocol/10.1007/978-1-0716-3008-2_4).
 
 ## Code
 
