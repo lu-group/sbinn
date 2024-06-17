@@ -218,4 +218,4 @@ sbinn(
     meal_q,
 )
 
-# variable_to_parameter_transform.variable_file(10000, 1000, 1000000, "variables.csv")
+variable_to_parameter_transform.variable_file(10000, 1000, 1000000, "variables.csv")
