@@ -185,7 +185,7 @@ def sbinn(data_t, data_y, meal_t, meal_q):
     maxepochs = 1000000
 
     model.compile("adam", lr=1e-3, loss_weights=[0, 0, 0, 0, 0, 0, 1e-2])
-    model.train(epochs=firsttrain, display_every=1000)
+    model.train(iterations=firsttrain, display_every=1000)
     model.compile(
         "adam",
         lr=1e-3,
@@ -197,7 +197,7 @@ def sbinn(data_t, data_y, meal_t, meal_q):
         var_list_, period=callbackperiod, filename=variablefilename
     )
     losshistory, train_state = model.train(
-        epochs=maxepochs, display_every=1000, callbacks=[variable]
+        iterations=maxepochs, display_every=1000, callbacks=[variable]
     )
 
     dde.saveplot(losshistory, train_state, issave=True, isplot=True)
